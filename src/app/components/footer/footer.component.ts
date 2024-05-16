@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControlApiService } from 'src/app/services/form-control-api.service';
 
 @Component({
@@ -11,24 +12,24 @@ export class FooterComponent {
     firstName: '',
     lastName: '',
     emailAddress: '',
+    phoneNumber: '',
     message: ''
   };
 
-  constructor(private formControlApiService: FormControlApiService) {}
+  constructor(private formControlApiService: FormControlApiService,
+    private _snackBar: MatSnackBar) {}
 
   onSubmit() {
     this.formControlApiService.submitForm(this.formData).subscribe(response => {
-      console.log('Form submitted successfully', response);
+      this._snackBar.open('Form submitted successfully', 'Close', {
+        duration: 3000,
+        panelClass: ['success-snackbar']
+      });
     }, error => {
-      console.error('Error submitting form', error);
+      this._snackBar.open('Error submitted form', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
     });
   }
-
-  // fetchForms() {
-  //   this.formControlApiService.getForms().subscribe(response => {
-  //     console.log('Forms fetched successfully', response);
-  //   }, error => {
-  //     console.error('Error fetching forms', error);
-  //   });
-  // }
 }
