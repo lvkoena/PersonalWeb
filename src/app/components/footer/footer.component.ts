@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormControlApiService } from 'src/app/services/form-control-api.service';
 
 @Component({
@@ -8,21 +7,28 @@ import { FormControlApiService } from 'src/app/services/form-control-api.service
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent {
-  form: FormGroup;
+  formData = {
+    firstName: '',
+    lastName: '',
+    emailAddress: '',
+    message: ''
+  };
 
-  constructor(private fb: FormBuilder, private formControlService: FormControlApiService) {
-    this.form = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      message: ['', Validators.required],
+  constructor(private formControlApiService: FormControlApiService) {}
+
+  onSubmit() {
+    this.formControlApiService.submitForm(this.formData).subscribe(response => {
+      console.log('Form submitted successfully', response);
+    }, error => {
+      console.error('Error submitting form', error);
     });
   }
 
-  onSubmit() {
-    if (this.form.valid) {
-      this.formControlService.submitForm(this.form.value).subscribe(response => {
-        console.log('Form submitted successfully', response);
-      });
-    }
-  }
+  // fetchForms() {
+  //   this.formControlApiService.getForms().subscribe(response => {
+  //     console.log('Forms fetched successfully', response);
+  //   }, error => {
+  //     console.error('Error fetching forms', error);
+  //   });
+  // }
 }

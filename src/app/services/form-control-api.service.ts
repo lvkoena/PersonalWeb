@@ -10,11 +10,11 @@ export class FormControlApiService {
 
   constructor(private http: HttpClient) {}
 
-  getAllForms(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+  submitForm(formData: any): Observable<any> {
+    return this.http.post(this.apiUrl, formData);
   }
 
-  submitForm(formData: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, formData);
+  getForms(): Observable<any> {
+    return this.http.get(this.apiUrl);
   }
 }
