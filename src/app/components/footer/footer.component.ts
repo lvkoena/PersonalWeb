@@ -19,17 +19,39 @@ export class FooterComponent {
   constructor(private formControlApiService: FormControlApiService,
     private _snackBar: MatSnackBar) {}
 
-  onSubmit() {
-    this.formControlApiService.submitForm(this.formData).subscribe(response => {
-      this._snackBar.open('Form submitted successfully', 'Close', {
-        duration: 3000,
-        panelClass: ['success-snackbar']
-      });
-    }, error => {
-      this._snackBar.open('Error submitted form', 'Close', {
-        duration: 3000,
-        panelClass: ['error-snackbar']
-      });
-    });
-  }
+    submitForm() {
+      if (this.areFormFieldsEmpty(this.formData)) {
+        this._snackBar.open('Please fill in all required fields', 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+        return; 
+      }
+  
+      this.formControlApiService.submitForm(this.formData).subscribe(
+        response => {
+          this._snackBar.open('Form submitted successfully', 'Close', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          }).afterDismissed().subscribe(() => {
+            window.location.reload();
+          });
+        },
+        error => {
+          this._snackBar.open('Error submitting form', 'Close', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+        }
+      );
+    }
+  
+    private areFormFieldsEmpty(formData: any): boolean {
+      for (const key in formData) {
+        if (formData.hasOwnProperty(key) && !formData[key]) {
+          return true; 
+        }
+      }
+      return false;
+    }
 }
